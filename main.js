@@ -94,22 +94,29 @@ for (let i = 0 ; i < 30 ; i++) {
 /*
   Use the .compareDNA() to find the two most related instances of pAequor.
 */
+// object to store the two most related instances
 const mostRelated = {
+  // the 2 most related instances
   spec1: 0,
   spec2: 0,
+  // the percentage they are related
   relatedPerc: 0,
+  // how many times that percentage was found
   cant: 0
 };
 let tempPerc;
+// all specimens are compared with each other
 for (i = 0 ; i < 30 ; i++) {
   for (let j = i + 1 ; j < 30 ; j++) {
     tempPerc = pAequor30[i].compareDNA(pAequor30[j]);
     if (tempPerc  > mostRelated.relatedPerc) {
+      // if a percentage above the one stored is found, this is the new one to store
       mostRelated.spec1 = i;
       mostRelated.spec2 = j;
       mostRelated.relatedPerc = tempPerc;
       mostRelated.cant = 1;
     } else if (tempPerc === mostRelated.relatedPerc) {
+      // if an equal percentage is found, only the quantity is incremented but the specimens stored are not changed
       mostRelated.cant++;
     }
   }
