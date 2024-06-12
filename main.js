@@ -31,8 +31,8 @@ const mockUpStrand = () => {
   .complementStrand() method that returns the complementary DNA strand. The rules are that 'A's match 
   with 'T's and vice versa. Also, 'C's match with 'G's and vice versa.
 */
-const pAequorFactory = (number, arr) => {
-  const pAequor = {
+function pAequorFactory(number, arr) {
+  return {
     specimenNum: number,
     dna: arr,
     mutate() {
@@ -47,13 +47,20 @@ const pAequorFactory = (number, arr) => {
       return this.dna;
     },
     compareDNA(other) {
+      // variable to count equal bases
       let equal = 0;
       for (let i = 0 ; i < 15 ; i++) {
+        // we compare both bases, if they are the same equal is incremented.
         if (other.dna[i] === this.dna[i]) equal++;
       }
-      console.log(`specimen #${this.specimenNum} and specimen #${other.specimenNum} have ${Math.round((equal / 15) * 100)}% DNA in common.`);
+      // the percentage is calculated (equal/15)*100 and rounded
+      // uncomment following lines to print the comparation between dnas (as in original requirements)
+      // console.log(`specimen #${this.specimenNum} and specimen #${other.specimenNum} have ${Math.round((equal / 15) * 100)}% DNA in common.`);
+      // uncomment following lines to return the percentage (only number rounded) as in project extension
+      return Math.round((equal / 15) * 100)
     },
     willLikelySurvive() {
+      // chance variable is incremented if the base is 'C' or 'G'. If it is 9 or more (>=60%) returns true
       let chance = 0;
       this.dna.forEach(element => {if (element === 'C' || element === 'G') chance++;});
       if (chance >= 9) return true;
@@ -73,8 +80,7 @@ const pAequorFactory = (number, arr) => {
         }
       })
     }
-  }
-  return pAequor;
+  };
 }
 
 // With the factory function set up, your team requests that you create 30 instances of pAequor that can survive in their natural environment. Store these instances in an array for your team to study later.
@@ -85,10 +91,27 @@ for (let i = 0 ; i < 30 ; i++) {
   if (!pAequor30[i].willLikelySurvive()) i--;
 }
 
-console.log(pAequor30[0].dna);
-console.log(pAequor30[0].complementStrand());
-
-
-
-// testing the code !!!!!!
-
+/*
+  Use the .compareDNA() to find the two most related instances of pAequor.
+*/
+const mostRelated = {
+  spec1: 0,
+  spec2: 0,
+  relatedPerc: 0,
+  cant: 0
+};
+let tempPerc;
+for (i = 0 ; i < 30 ; i++) {
+  for (let j = i + 1 ; j < 30 ; j++) {
+    tempPerc = pAequor30[i].compareDNA(pAequor30[j]);
+    if (tempPerc  > mostRelated.relatedPerc) {
+      mostRelated.spec1 = i;
+      mostRelated.spec2 = j;
+      mostRelated.relatedPerc = tempPerc;
+      mostRelated.cant = 1;
+    } else if (tempPerc === mostRelated.relatedPerc) {
+      mostRelated.cant++;
+    }
+  }
+};
+console.log(mostRelated);
